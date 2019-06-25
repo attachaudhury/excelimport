@@ -1,71 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-            .xport, .btn {
-                display: inline;
-                text-align:center;
-            }
-            a { text-decoration: none }
-            #data-table, #data-table th, #data-table td { border: 1px solid black }
-            </style>
+        .xport,
+        .btn {
+            display: inline;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none
+        }
+
+        #data-table,
+        #data-table th,
+        #data-table td {
+            border: 1px solid black
+        }
+    </style>
 </head>
+
 <body>
-<input type="file" onchange="filechanged(this)" accept=".csv,.xlsx, .xls">
-<div id="jsGrid">
-</div>  
-<button onclick="ShowEditedData()">Show Edited Data</button>  
+    <input type="file" onchange="filechanged(this)" accept=".csv,.xlsx, .xls">
+    <div id="jsGrid">
+    </div>
+    <button onclick="ShowEditedData()">Show Edited Data</button>
 </body>
-<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
-<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+<link type="text/css" rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
 <script>
-    function filechanged(f)
-    {
+    function filechanged(f) {
         var file = f.files[0];
+        var propertytypes = [
+        { Name: "House" },
+        { Name: "Flat" },
+        { Name: "Upper Portion" }
+    ];
+    var furnishingtypes = [
+        { Name: "" },    
+        { Name: "Un-Furnished" },
+        { Name: "Semi Furnished" },
+        { Name: "Fully Furnished" }
+    ];
+    var purposetypes = [
+        { Name: "Sale" },
+        { Name: "Rent" }
+    ];
+    var unittypes = [
+        { Name: "Feet" },
+        { Name: "Yard" },
+        { Name: "Marla" },
+        { Name: "Kanal" },
+    ];
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             var data = new Uint8Array(e.target.result);
-            var wb = XLSX.read(data, {type: 'array'});
-            var ws = wb.Sheets.Sheet1
-            var jsondata =  XLSX.utils.sheet_to_json(ws)
-            //console.log(jsondata)
-            // var html_string = XLSX.utils.sheet_to_html(ws, { id: "data-table", editable: true });
-            // document.getElementById("wrapper").innerHTML = html_string;
-            console.log(jsondata);
+            var wb = XLSX.read(data, {
+                type: 'array'
+            });
+            var ws = wb.Sheets.Sheet1;
+            var jsondata = XLSX.utils.sheet_to_json(ws)
             jsgrid = $("#jsGrid").jsGrid({
-        width: "100%",
-        height: "400px",
- 
-        inserting: true,
-        editing: true,
-        sorting: true,
-        paging: true,
- 
-        data: jsondata,
- 
-        fields: [
-            { name: "MLS#", type: "text", width: 150, validate: "required" },
-            { name: "Bedroon", type: "number", width: 50 },
-            { name: "Bathroom", type: "text", width: 200 },
-            { name: "Prop Type", type: "text", width: 200 },
-            { name: "Size", type: "text", width: 200 },
-            { type: "control" }
-        ]
-    });
+                width: "100%",
+                inserting: true,
+                editing: true,
+                data: jsondata,
+                fields: [{
+                        name: "Mls",
+                        type: "text",
+                        width: 150,
+                        validate: "required"
+                    },
+                    {
+                        name: "Property Type",
+                        type: "select", items: propertytypes, valueField: "Name", textField: "Name",
+                        width: 200,
+                        validate: "required"
+                    },
+                    {
+                        name: "Purpose",
+                        type: "select", items: purposetypes, valueField: "Name", textField: "Name",
+                        width: 200,
+                        validate: "required"
+                    },
+                    {
+                        name: "Size",
+                        type: "number",
+                        width: 200,
+                        validate: "required"
+                    },
+                    {
+                        name: "Unit",
+                        type: "select", items: unittypes, valueField: "Name", textField: "Name",
+                        width: 200,
+                        validate: "required"
+                    },
+                    {
+                        name: "Price",
+                        type: "number",
+                        width: 200,
+                        validate: "required"
+                    },
+                    {
+                        name: "Furnishing",
+                        type: "select", items: furnishingtypes, valueField: "Name", textField: "Name",
+                        width: 200
+                    },
+                    {
+                        name: "City",
+                        type: "text",
+                        width: 200
+                    },
+                    {
+                        name: "Location",
+                        type: "text",
+                        width: 200
+                    },
+                    {
+                        name: "Bedroom",
+                        type: "number",
+                        width: 50
+                    },
+                    {
+                        name: "Bathroom",
+                        type: "number",
+                        width: 200
+                    },
+                    {
+                        name: "Description",
+                        type: "text",
+                        width: 200
+                    },
+                    {
+                        type: "control"
+                    }
+                ]
+            });
         };
         reader.readAsArrayBuffer(file);
     }
-    function ShowEditedData()
-    {
-             console.log($("#jsGrid").jsGrid("option", "data"));
-        
+
+    function ShowEditedData() {
+        console.log($("#jsGrid").jsGrid("option", "data"));
+
     }
 </script>
+
 </html>
